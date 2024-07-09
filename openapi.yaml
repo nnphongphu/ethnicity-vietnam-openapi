@@ -5,10 +5,10 @@ info:
     This is the Ethnicity Vietnam server based on the OpenAPI 3.0 specification. 
     The server is used to serve content for the main website as well as provide 
     a fully operational CRUD API for our content management system.
-  
+
     _The API implemetation of the server MUST strictly comply to all the specifications in
     this document._
-    
+
     Useful links:
     - [Ethnicity Vietnam's core client](https://github.com/nnphongphu/ethnicity-vietnam-core-client)
     - [Ethnicity Vietnam's core server](https://github.com/nnphongphu/ethnicity-vietnam-core-server)
@@ -19,9 +19,9 @@ info:
   version: 1.0.0
 externalDocs:
   description: Find out more about OpenAPI 3.0
-  url: http://swagger.io
+  url: 'http://swagger.io'
 servers:
-  - url: https://api.ethnicityviet.com/
+  - url: 'https://api.ethnicityviet.com/'
 tags:
   - name: Posts
     description: Everything about Post
@@ -33,24 +33,790 @@ tags:
     description: All about Collection
 paths:
   /posts:
-    $ref: "./routes/posts.yaml"
-  /posts/{postId}:
-    $ref: "./routes/post.yaml"
+    get:
+      tags:
+        - Posts
+      summary: Get latest posts
+      description: Return posts sorted by creation date in descending order
+      parameters:
+        - name: cursorId
+          in: query
+          description: 'ID for pagination to get posts created before the cursor (if not specified, will return latest posts)'
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: The number of posts to return (defaults to 10)
+          schema:
+            type: integer
+            mininum: 1
+            maximum: 10
+      responses:
+        '200':
+          description: Successfully get post
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Posts
+      summary: Update an existing post
+      description: Update an existing post
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Post'
+                - required:
+                    - title
+                    - thumbnailUrl
+                    - preview
+                    - body
+                    - status
+                    - category
+                    - createdAt
+                    - updatedAt
+      responses:
+        '200':
+          description: Successfully create post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the newly created post
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+  '/posts/{postId}':
+    get:
+      tags:
+        - Posts
+      summary: Get an existing post
+      description: Return a single post by ID
+      parameters:
+        - name: postId
+          in: path
+          description: ID of post to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully get post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Posts
+      summary: Update an existing post
+      description: Update an existing post
+      parameters:
+        - name: postId
+          in: path
+          description: ID of post to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Successfully update post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+    delete:
+      tags:
+        - Posts
+      summary: Delete an existing post
+      description: Delete an existing post by ID
+      parameters:
+        - name: postId
+          in: path
+          description: ID of post to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully delete post
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
   /patterns:
-    $ref: "./routes/patterns.yaml"
-  /patterns/{patternId}:
-    $ref: "./routes/pattern.yaml"
+    get:
+      tags:
+        - Patterns
+      summary: Get latest patterns
+      description: Return patterns sorted by creation date in descending order
+      parameters:
+        - name: cursorId
+          in: query
+          description: 'ID for pagination to get patterns created before the cursor (if not specified, will return latest patterns)'
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: The number of patterns to return (defaults to 10)
+          schema:
+            type: integer
+            mininum: 1
+            maximum: 10
+      responses:
+        '200':
+          description: Successfully get pattern
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pattern'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Patterns
+      summary: Update an existing pattern
+      description: Update an existing pattern
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Pattern'
+                - required:
+                    - title
+                    - thumbnailUrl
+                    - preview
+                    - body
+                    - status
+                    - category
+                    - createdAt
+                    - updatedAt
+      responses:
+        '200':
+          description: Successfully create pattern
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the newly created pattern
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+  '/patterns/{patternId}':
+    get:
+      tags:
+        - Patterns
+      summary: Get an existing pattern
+      description: Return a single pattern by ID
+      parameters:
+        - name: patternId
+          in: path
+          description: ID of pattern to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully get pattern
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pattern'
+        '404':
+          description: Pattern not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Patterns
+      summary: Update an existing pattern
+      description: Update an existing pattern
+      parameters:
+        - name: patternId
+          in: path
+          description: ID of pattern to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pattern'
+      responses:
+        '200':
+          description: Successfully update pattern
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pattern'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+    delete:
+      tags:
+        - Patterns
+      summary: Delete an existing pattern
+      description: Delete an existing pattern by ID
+      parameters:
+        - name: patternId
+          in: path
+          description: ID of pattern to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully delete pattern
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
   /products:
-    $ref: "./routes/products.yaml"
-  /products/{productId}:
-    $ref: "./routes/product.yaml"
+    get:
+      tags:
+        - Products
+      summary: Get latest products
+      description: Return products sorted by creation date in descending order
+      parameters:
+        - name: cursorId
+          in: query
+          description: 'ID for pagination to get products created before the cursor (if not specified, will return latest products)'
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: The number of products to return (defaults to 10)
+          schema:
+            type: integer
+            mininum: 1
+            maximum: 10
+      responses:
+        '200':
+          description: Successfully get product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Products
+      summary: Update an existing product
+      description: Update an existing product
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Product'
+                - required:
+                    - title
+                    - thumbnailUrl
+                    - preview
+                    - body
+                    - status
+                    - category
+                    - createdAt
+                    - updatedAt
+      responses:
+        '200':
+          description: Successfully create product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the newly created product
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+  '/products/{productId}':
+    get:
+      tags:
+        - Products
+      summary: Get an existing product
+      description: Return a single product by ID
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully get product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Products
+      summary: Update an existing product
+      description: Update an existing product
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successfully update product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+    delete:
+      tags:
+        - Products
+      summary: Delete an existing product
+      description: Delete an existing product by ID
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully delete product
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
   /collections:
-    $ref: "./routes/collections.yaml"
-  /collections/{collectionId}:
-    $ref: "./routes/collection.yaml"
+    get:
+      tags:
+        - Collections
+      summary: Get latest collections
+      description: Return collections sorted by creation date in descending order
+      parameters:
+        - name: cursorId
+          in: query
+          description: 'ID for pagination to get collections created before the cursor (if not specified, will return latest collections)'
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: The number of collections to return (defaults to 10)
+          schema:
+            type: integer
+            mininum: 1
+            maximum: 10
+      responses:
+        '200':
+          description: Successfully get collection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/Collection'
+                    - type: object
+                      properties:
+                        patterns:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/Pattern'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Collections
+      summary: Update an existing collection
+      description: Update an existing collection
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Collection'
+                - required:
+                    - title
+                    - thumbnailUrl
+                    - preview
+                    - body
+                    - status
+                    - category
+                    - createdAt
+                    - updatedAt
+      responses:
+        '200':
+          description: Successfully create collection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the newly created collection
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+  '/collections/{collectionId}':
+    get:
+      tags:
+        - Collections
+      summary: Get an existing collection
+      description: Return a single collection by ID
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID of collection to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully get collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '404':
+          description: Collection not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Collections
+      summary: Update an existing collection
+      description: Update an existing collection
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID of collection to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The content to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Collection'
+      responses:
+        '200':
+          description: Successfully update collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
+    delete:
+      tags:
+        - Collections
+      summary: Delete an existing collection
+      description: Delete an existing collection by ID
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID of collection to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully delete collection
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+      security:
+        - api_key_authentication: []
 components:
   schemas:
-    $ref: "./schemas/_index.yaml"
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        title:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+        preview:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        body:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        status:
+          type: string
+          enum:
+            - draft
+            - published
+            - deleted
+        category:
+          type: string
+          enum:
+            - media
+            - service
+            - project
+            - discover
+            - update
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Pattern:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        description:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        ethnicity:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+        imageUrl:
+          type: string
+          format: uri
+        fileUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: object
+          required:
+            - vi
+            - en
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        description:
+          type: object
+          required:
+            - vi
+            - en
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        ethnicity:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+        imageUrl:
+          type: string
+          format: uri
+        fileUrl:
+          type: string
+          format: uri
+        purchaseUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+        description:
+          type: object
+          properties:
+            vi:
+              type: string
+            en:
+              type: string
+        patternIds:
+          type: array
+          items:
+            type: string
   securitySchemes:
     firebase_authentication:
       type: oauth2
@@ -58,10 +824,10 @@ components:
         implicit:
           authorizationUrl: 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[FIREBASE_API_KEY]'
           scopes:
-            write: 'write access to firebase resources'
+            write: write access to firebase resources
       x-google-issuer: 'https://securetoken.google.com/ethnicityvn'
       x-google-jwks_uri: 'https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com'
-      x-google-audiences: 'ethnicityvn'
+      x-google-audiences: ethnicityvn
     api_key_authentication:
       type: apiKey
       name: apiKey

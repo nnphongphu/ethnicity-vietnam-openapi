@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: Ethnicity Vietnam - OpenAPI 3.0
+  description: |-
+    This is the Ethnicity Vietnam server based on the OpenAPI 3.0 specification. 
+    The server is used to serve content for the main website as well as provide 
+    a fully operational CRUD API for our content management system.
+  
+    _The API implemetation of the server MUST strictly comply to all the specifications in
+    this document._
+    
+    Useful links:
+    - [Ethnicity Vietnam's core client](https://github.com/nnphongphu/ethnicity-vietnam-core-client)
+    - [Ethnicity Vietnam's core server](https://github.com/nnphongphu/ethnicity-vietnam-core-server)
+    - [OpenAPI specifications for Ethnicity Vietnam Restful API](https://github.com/nnphongphu/ethnicity-vietnam-openapi)
+  contact:
+    name: Nguyen Phong Phu
+    email: nnphongphu@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about OpenAPI 3.0
+  url: http://swagger.io
+servers:
+  - url: https://api.ethnicityviet.com/
+tags:
+  - name: Posts
+    description: Everything about Post
+  - name: Patterns
+    description: Operations about Pattern
+  - name: Products
+    description: Access to Product
+  - name: Collections
+    description: All about Collection
+paths:
+  /posts:
+    $ref: "./routes/posts.yaml"
+  /posts/{postId}:
+    $ref: "./routes/post.yaml"
+  /patterns:
+    $ref: "./routes/patterns.yaml"
+  /patterns/{patternId}:
+    $ref: "./routes/pattern.yaml"
+  /products:
+    $ref: "./routes/products.yaml"
+  /products/{productId}:
+    $ref: "./routes/product.yaml"
+  /collections:
+    $ref: "./routes/collections.yaml"
+  /collections/{collectionId}:
+    $ref: "./routes/collection.yaml"
+components:
+  schemas:
+    $ref: "./schemas/index.yaml"
+  securitySchemes:
+    firebase_authentication:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[FIREBASE_API_KEY]'
+          scopes:
+            write: 'write access to firebase resources'
+      x-google-issuer: 'https://securetoken.google.com/ethnicityvn'
+      x-google-jwks_uri: 'https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com'
+      x-google-audiences: 'ethnicityvn'
+    api_key_authentication:
+      type: apiKey
+      name: apiKey
+      in: header
