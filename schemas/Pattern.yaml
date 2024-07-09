@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true
+  name:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  description:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  ethnicity:
+    type: string
+  thumbnailUrl:
+    type: string
+    format: uri
+  imageUrl:
+    type: string
+    format: uri
+  fileUrl:
+    type: string
+    format: uri
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time

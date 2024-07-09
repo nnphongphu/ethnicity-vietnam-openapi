@@ -1,0 +1,72 @@
+get:
+  tags:
+    - Products
+  summary: Get latest products
+  description: Return products sorted by creation date in descending order
+  parameters:
+    - name: cursorId
+      in: query
+      description: >-
+        ID for pagination to get products created before the cursor
+        (if not specified, will return latest products)
+      schema:
+        type: string
+    - name: size
+      in: query
+      description: The number of products to return (defaults to 10)
+      schema:
+        type: integer
+        mininum: 1
+        maximum: 10
+  responses:
+    '200':
+      description: Successfully get product
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/Product.yaml'
+    '500':
+      description: Internal server error
+post: 
+  tags:
+    - Products
+  summary: Update an existing product
+  description: Update an existing product
+  requestBody:
+    description: The content to update
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '../schemas/Product.yaml'
+            - required:
+              - title
+              - thumbnailUrl
+              - preview
+              - body
+              - status
+              - category
+              - createdAt
+              - updatedAt
+  responses:
+    '200':
+      description: Successfully create product
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the newly created product
+    '400':
+      description: Bad request
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+  security:
+    - api_key_authentication: []

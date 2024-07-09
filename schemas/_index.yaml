@@ -1,0 +1,8 @@
+Post:
+  $ref: "./Post.yaml"
+Pattern:
+  $ref: "./Pattern.yaml"
+Product:
+  $ref: "./Product.yaml"
+Collection:
+  $ref: "./Collection.yaml"

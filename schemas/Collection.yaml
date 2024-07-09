@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true
+  name:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  thumbnailUrl:
+    type: string
+    format: uri
+  description:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  patternIds:
+    type: array
+    items:
+      type: string

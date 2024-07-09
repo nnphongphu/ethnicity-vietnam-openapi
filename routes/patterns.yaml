@@ -1,0 +1,72 @@
+get:
+  tags:
+    - Patterns
+  summary: Get latest patterns
+  description: Return patterns sorted by creation date in descending order
+  parameters:
+    - name: cursorId
+      in: query
+      description: >-
+        ID for pagination to get patterns created before the cursor
+        (if not specified, will return latest patterns)
+      schema:
+        type: string
+    - name: size
+      in: query
+      description: The number of patterns to return (defaults to 10)
+      schema:
+        type: integer
+        mininum: 1
+        maximum: 10
+  responses:
+    '200':
+      description: Successfully get pattern
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/Pattern.yaml'
+    '500':
+      description: Internal server error
+post: 
+  tags:
+    - Patterns
+  summary: Update an existing pattern
+  description: Update an existing pattern
+  requestBody:
+    description: The content to update
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '../schemas/Pattern.yaml'
+            - required:
+              - title
+              - thumbnailUrl
+              - preview
+              - body
+              - status
+              - category
+              - createdAt
+              - updatedAt
+  responses:
+    '200':
+      description: Successfully create pattern
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the newly created pattern
+    '400':
+      description: Bad request
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+  security:
+    - api_key_authentication: []

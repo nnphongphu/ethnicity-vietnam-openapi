@@ -1,0 +1,49 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true
+  title:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  thumbnailUrl:
+    type: string
+    format: uri
+  preview:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  body:
+    type: object
+    properties:
+      vi:
+        type: string
+      en:
+        type: string
+  status:
+    type: string
+    enum:
+      - draft
+      - published
+      - deleted
+  category:
+    type: string
+    enum:
+      - media
+      - service
+      - project
+      - discover
+      - update
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time

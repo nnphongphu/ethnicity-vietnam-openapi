@@ -12,11 +12,8 @@ The example API specification used by this repository can be seen hosted at [htt
 1. Click the `Use this template` button above to create a new repository from this template.
 
 2. Go to the settings for your repository at `https://github.com/{github-username}/{repository-name}/settings` and enable GitHub Pages.
-
-    ![Headers](/screenshots/swagger-github-pages.png?raw=true)
     
 3. Browse to the Swagger documentation at `https://{github-username}.github.io/{repository-name}/`.
-
 
 ## Steps to manually configure in your own repository
 
